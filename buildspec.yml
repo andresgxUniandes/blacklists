@@ -1,0 +1,25 @@
+version: 0.2
+
+env:
+  variables:
+    ENV: "test"
+
+phases:
+  install:
+    runtime-versions:
+      python: "3.11"
+    commands:
+      - pip install -r blacklist_app/requirements.txt -r blacklist_app/requirements-test.txt
+
+  pre_build:
+    commands:
+      - cd blacklist_app && python -m pytest tests/unit/ -v --tb=short
+
+  build:
+    commands:
+      - cd blacklist_app && zip -r ../blacklist-app.zip . -x "tests/*" -x "__pycache__/*" -x "*.pyc" -x "docker-compose.yml"
+
+artifacts:
+  files:
+    - blacklist-app.zip
+  discard-paths: yes
