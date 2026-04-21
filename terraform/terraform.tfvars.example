@@ -49,3 +49,7 @@ app_version = "v1"
 jwt_secret_key = "CHANGE_ME_jwt_secret_key_very_long_and_random"
 auth_username  = "admin"
 auth_password  = "CHANGE_ME_admin_password"
+
+# ── CodeBuild ─────────────────────────────────────────────────────────────────
+
+github_repo_url = "https://github.com/OWNER/REPO"

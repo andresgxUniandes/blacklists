@@ -86,3 +86,15 @@ output "alb_security_group_id" {
   description = "ID of the ALB security group"
   value       = aws_security_group.alb.id
 }
+
+# ── CodeBuild ─────────────────────────────────────────────────────────────────
+
+output "codebuild_project_name" {
+  description = "Name of the CodeBuild project"
+  value       = aws_codebuild_project.blacklist.name
+}
+
+output "codebuild_project_arn" {
+  description = "ARN of the CodeBuild project"
+  value       = aws_codebuild_project.blacklist.arn
+}

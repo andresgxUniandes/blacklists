@@ -177,3 +177,10 @@ variable "auth_password" {
   default     = "admin"
   sensitive   = true
 }
+
+# ── CodeBuild ─────────────────────────────────────────────────────────────────
+
+variable "github_repo_url" {
+  description = "GitHub repository HTTPS URL used as CodeBuild source (e.g. https://github.com/owner/repo)"
+  type        = string
+}
