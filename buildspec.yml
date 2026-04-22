@@ -11,13 +11,13 @@ phases:
   pre_build:
     commands:
       - echo "=== Running unit tests ==="
-      - cd blacklist_app && python -m pytest tests/unit/ -v
+      - cd $CODEBUILD_SRC_DIR/blacklist_app && python -m pytest tests/unit/ -v
 
   build:
     commands:
       - export APP_VERSION=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-8)
       - echo "=== Building application bundle version $APP_VERSION ==="
-      - cd blacklist_app && zip -r $CODEBUILD_SRC_DIR/app_bundle.zip . -x "*__pycache__*" -x "*.pyc" -x "*/.pytest_cache/*" -x ".pytest_cache/*" -x ".env" -x "docker-compose.yml"
+      - cd $CODEBUILD_SRC_DIR/blacklist_app && zip -r $CODEBUILD_SRC_DIR/app_bundle.zip . -x "*__pycache__*" -x "*.pyc" -x "*/.pytest_cache/*" -x ".pytest_cache/*" -x ".env" -x "docker-compose.yml"
       - echo "=== Uploading bundle to S3 ==="
       - aws s3 cp $CODEBUILD_SRC_DIR/app_bundle.zip s3://$S3_BUCKET/versions/$APP_VERSION/app.zip
       - echo "=== Creating Elastic Beanstalk application version $APP_VERSION ==="
