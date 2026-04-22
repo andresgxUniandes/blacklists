@@ -56,7 +56,26 @@ resource "aws_iam_role_policy" "codebuild" {
           "elasticbeanstalk:UpdateEnvironment",
           "elasticbeanstalk:DescribeEnvironments",
           "elasticbeanstalk:DescribeApplicationVersions",
-          "elasticbeanstalk:DescribeEvents"
+          "elasticbeanstalk:DescribeEvents",
+          "elasticbeanstalk:DescribeEnvironmentHealth",
+          "elasticbeanstalk:DescribeEnvironmentResources",
+          "elasticbeanstalk:ValidateConfigurationSettings"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ElasticBeanstalkUnderlyingServices"
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeScalingActivities",
+          "cloudformation:DescribeStackResource",
+          "cloudformation:DescribeStackResources",
+          "cloudformation:DescribeStacks",
+          "ec2:DescribeInstances",
+          "elasticloadbalancing:DescribeLoadBalancers",
+          "elasticloadbalancing:DescribeTargetGroups",
+          "elasticloadbalancing:DescribeTargetHealth"
         ]
         Resource = "*"
       },
@@ -134,4 +153,23 @@ resource "aws_codebuild_project" "blacklist" {
   }
 
   tags = merge(local.tags, { Name = "${local.name_prefix}-build" })
+}
+
+# ── GitHub Webhook (trigger on push to main) ──────────────────────────────────
+
+resource "aws_codebuild_webhook" "blacklist" {
+  project_name = aws_codebuild_project.blacklist.name
+  build_type   = "BUILD"
+
+  filter_group {
+    filter {
+      type    = "EVENT"
+      pattern = "PUSH"
+    }
+
+    filter {
+      type    = "HEAD_REF"
+      pattern = "^refs/heads/main$"
+    }
+  }
 }
